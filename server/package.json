@@ -1,0 +1,26 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "This is the backend of the OpenPin cloude platform which is a developer friendly platform to communicate device from anywhere from the the globe.",
+  "license": "ISC",
+  "author": "Manash Ranjan",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon ./index.js",
+    "start": "node ./index.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.16.2",
+    "mqtt": "^5.13.2",
+    "nanoid": "^5.1.5",
+    "socket.io": "^4.8.1"
+  }
+}
