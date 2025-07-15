@@ -1,14 +1,15 @@
 // routes/device.route.js
 
 import express from "express";
+
 import {
-  listDevices,
-  getDevice,
   createDevice,
-  updateDevice,
   deleteDevice,
-} from "../src/controllers/device.controller.js";
-import { protect } from "../src/middlewares/auth.middleware.js";
+  getDevice,
+  listDevices,
+  updateDevice,
+} from "./../controllers/device.controller";
+import { protect } from "../middlewares/auth.middleware";
 
 const router = express.Router({ mergeParams: true });
 // mergeParams allows access to :projectId from the parent route
