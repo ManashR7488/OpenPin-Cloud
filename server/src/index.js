@@ -63,6 +63,8 @@ function printLocalIP() {
   return null;
 }
 
+process.env.NODE_ENV === "production" && connectDB();
+
 app.listen(PORT, () => {
   connectDB();
   console.log(`Server is running on http://localhost:${PORT}`);
