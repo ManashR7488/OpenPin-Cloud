@@ -1,7 +1,11 @@
 import express from "express";
-;
-
-import { createProject, deleteProject, getProject, listProjects, updateProject } from "../controllers/project.controller.js";
+import {
+  createProject,
+  deleteProject,
+  getProject,
+  listProjects,
+  updateProject,
+} from "../controllers/project.controller.js";
 import { protect } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();

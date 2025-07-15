@@ -8,8 +8,8 @@ import {
   getDevice,
   listDevices,
   updateDevice,
-} from "./../controllers/device.controller";
-import { protect } from "../middlewares/auth.middleware";
+} from "./../controllers/device.controller.js";
+import { protect } from "../middlewares/auth.middleware.js";
 
 const router = express.Router({ mergeParams: true });
 // mergeParams allows access to :projectId from the parent route
