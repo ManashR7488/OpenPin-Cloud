@@ -5,8 +5,8 @@ import {
   createFeature,
   updateFeature,
   deleteFeature,
-} from '../controllers/feature.controller.js';
-import { protect } from '../middlewares/auth.middleware.js';
+} from '../src/controllers/feature.controller.js';
+import { protect } from '../src/middlewares/auth.middleware.js';
 
 const router = express.Router({ mergeParams: true });
 
