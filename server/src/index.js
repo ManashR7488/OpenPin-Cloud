@@ -63,8 +63,8 @@ function printLocalIP() {
   return null;
 }
 
-app.listen(PORT, async () => {
-  await connectDB();
-  process.env.NODE_ENV === "development" && console.log(`Server is running on http://localhost:${PORT}`);
-  process.env.NODE_ENV === "development" && printLocalIP();
+app.listen(PORT, () => {
+  connectDB();
+  console.log(`Server is running on http://localhost:${PORT}`);
+  printLocalIP();
 });
