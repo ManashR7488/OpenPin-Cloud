@@ -1,17 +1,17 @@
 import express from "express";
 import os from "os";
 import cookieParser from "cookie-parser";
-
+import cors from "cors"
 import dotenv from "dotenv";
+
+dotenv.config();
 import userRoute from "./routes/user.route.js";
 import projectRoute from "./routes/prject.route.js";
 import deviceRoutes from "./routes/device.route.js";
 import featureRoutes from "./routes/feature.route.js";
 import connectDB from "./config/db.js";
-import cors from "cors"
 
 const app = express();
-dotenv.config();
 console.log(process.env.PROJECT_NAME)
 
 const PORT = process.env.PORT || 5000;
