@@ -16,6 +16,11 @@ console.log(process.env.PROJECT_NAME)
 
 const PORT = process.env.PORT || 5000;
 
+const PROJECT_NAME=process.env.PROJECT_NAME
+const JWT_SECRET= process.env.JWT_SECRET
+const MONGO_URI= process.env.MONGO_URI
+const NODE_ENV = process.env.NODE_ENV
+
 app.use(cors({
   origin: process.env.NODE_ENV === "production" ? "https://openpin-cloud.vercel.app" : "http://localhost:5173",
   credentials:true
