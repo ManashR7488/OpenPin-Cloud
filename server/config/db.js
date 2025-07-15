@@ -1,5 +1,8 @@
 import mongoose from 'mongoose';
 import { myError } from '../utils/error.js';
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const connectDB = async () => {
   const dbURI =

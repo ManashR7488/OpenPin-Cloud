@@ -2,6 +2,9 @@ import User from "../models/User.model.js";
 import { generateToken } from "../middlewares/auth.middleware.js";
 import { myError } from "../utils/error.js";
 import bcrypt from "bcryptjs";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export const userRegister = async (req, res) => {
   try {

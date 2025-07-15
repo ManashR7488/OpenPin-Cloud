@@ -1,6 +1,9 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.model.js";
 import { myError } from "../utils/error.js";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET || "openpin_secret_locopolopololoco";
 const COOKIE_NAME = "token";
