@@ -1,5 +1,5 @@
-import Project from "../Models/Project.model.js";
-import Device from "../Models/Device.model.js";
+import Project from "../models/Project.model.js";
+import Device from "../models/Device.model.js";
 import User from "../models/User.model.js";
 import { myError } from "../utils/error.js";
 

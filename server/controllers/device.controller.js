@@ -1,6 +1,6 @@
-import Device from "../Models/Device.model.js";
-import Project from "../Models/Project.model.js";
-import Feature from "../Models/Feature.model.js";
+import Device from "../models/Device.model.js";
+import Project from "../models/Project.model.js";
+import Feature from "../models/Feature.model.js";
 import { myError } from "../utils/error.js";
 import { generateSecret } from "../utils/generateSecret.js";
 
