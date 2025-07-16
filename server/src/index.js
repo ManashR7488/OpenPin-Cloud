@@ -1,10 +1,10 @@
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import os from "os";
-import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors"
 
-dotenv.config();
 import userRoute from "./routes/user.route.js";
 import projectRoute from "./routes/prject.route.js";
 import deviceRoutes from "./routes/device.route.js";
