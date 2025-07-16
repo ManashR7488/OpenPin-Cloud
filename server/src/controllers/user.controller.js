@@ -102,8 +102,8 @@ export const userProfile = async (req, res) => {
     // In case you want to transform the output or remove extra fields:
     const { _id, name, email, role, projects, createdAt, updatedAt } = user;
     return res.status(200).json({
-      message:"get profile Success",
-      user
+      message: "get profile Success",
+      user,
     });
   } catch (err) {
     // Use your error-logging helper
@@ -176,10 +176,11 @@ export const userLogout = async (req, res) => {
   const COOKIE_NAME = "token";
 
   // Clear the cookie
-  res.clearCookie(COOKIE_NAME, {
+  res.cookie(COOKIE_NAME, "", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    sameSite: "none",
+    secure: process.env.NODE_ENV === "production", // HTTPS only in production
+    maxAge: 0, // 7 days
   });
 
   // Send confirmation
