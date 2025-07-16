@@ -12,10 +12,10 @@ const useAuthStore = create((set, get) => ({
     try {
       const res = await axiosInstance.get("/api/auth/profile");
       set({ user: res.data.user, isLoading: false });
-      console.log(res, user);
+      console.log(res, get().user);
     } catch (err) {
       set({ user: null, token: null, isLoading: false });
-      console.log(res, user);
+      console.log(get().user);
       // toast.error("Session expired, please log in again.");
     }
   },
@@ -27,13 +27,13 @@ const useAuthStore = create((set, get) => ({
       const { user } = res.data;
       set({ user, isLoading: false });
       toast.success("Login successful!");
-      console.log(res, user);
+      console.log(res, get().user);
     } catch (err) {
       set({ isLoading: false });
       const msg = err.response?.data?.message || err.message;
       set({ error: msg });
       toast.error(msg);
-      console.log(res, user);
+      console.log(get().user);
       throw new Error(msg);
     }
   },
@@ -45,13 +45,13 @@ const useAuthStore = create((set, get) => ({
       const { user } = res.data;
       set({ user, isLoading: false });
       toast.success("Registration successful!");
-      console.log(res, user);
+      console.log(res, get().user);
     } catch (err) {
       set({ isLoading: false });
       const msg = err.response?.data?.message || err.message;
       set({ error: msg });
       toast.error(msg);
-      console.log(res, user);
+      console.log(get().user);
       throw new Error(msg);
     }
   },
@@ -62,12 +62,12 @@ const useAuthStore = create((set, get) => ({
       const res = await axiosInstance.post("/api/auth/logout");
       set({ user: null, isLoading: false });
       toast.info("Logout Succsesfully");
-      console.log(res, user);
+      console.log(res, get().user);
     } catch (err) {
       const msg = err.response?.data?.message || err.message;
       toast.error(msg);
       set({ isLoading: false });
-      console.log(res, user);
+      console.log(get().user);
       throw new Error(msg);
     }
   },
