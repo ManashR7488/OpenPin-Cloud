@@ -17,7 +17,7 @@ const App = () => {
 
   useEffect(() => {
     profile();
-  }, [""]);
+  }, [user]);
 
   return (
     <div>

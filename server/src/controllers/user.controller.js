@@ -180,7 +180,7 @@ export const userLogout = async (req, res) => {
     httpOnly: true,
     sameSite: "none",
     secure: process.env.NODE_ENV === "production", // HTTPS only in production
-    maxAge: 0, // 7 days
+    maxAge: 0, // 7 
   });
 
   // Send confirmation
