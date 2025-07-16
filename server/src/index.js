@@ -29,6 +29,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser())
 
+process.env.NODE_ENV === "production" && await connectDB();  // in production we connect to database first.
+
 app.get("/", (req, res) => {
   res.send("Hello from OpenPin Express server!");
 });
@@ -63,7 +65,7 @@ function printLocalIP() {
   return null;
 }
 
-process.env.NODE_ENV === "production" && connectDB();
+
 
 app.listen(PORT, () => {
   connectDB();
