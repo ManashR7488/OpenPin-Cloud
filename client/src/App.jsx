@@ -11,6 +11,7 @@ import Cradentials from "./pages/Cradentials/Cradentials";
 import { ToastContainer } from "react-toastify";
 import useAuthStore from "./store/useAuthStore";
 import Dashboard from "./pages/Dashboard/Dashboard";
+import Profile from "./pages/Profile/Profile";
 
 const App = () => {
   const { user, profile } = useAuthStore();
@@ -28,10 +29,11 @@ const App = () => {
 
         {/* Protected App Layout Routes */}
         <Route path="/app" element={<Layout />}>
-          <Route path="/app/" element={<Dashboard />} />
+          <Route path="/app" element={<Dashboard />} />
           <Route path="projects" element={<Projects />} />
           <Route path="devices" element={<Devices />} />
           <Route path="credentials" element={<Cradentials />} />
+          <Route path="profile" element={<Profile />} />
           {/* this page is use for the device api keys */}
           <Route path="settings" element={<Settings />} />
         </Route>
