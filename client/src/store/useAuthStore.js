@@ -8,14 +8,14 @@ const useAuthStore = create((set, get) => ({
   error: null,
 
   profile: async () => {
-    set({ isLoading: true });
+    // set({ isLoading: true });
     try {
       const res = await axiosInstance.get("/api/auth/profile");
       set({ user: res.data.user, isLoading: false });
       // console.log(res, get().user);
     } catch (err) {
-      set({ user: null, token: null, isLoading: false });
-      console.log(get().user);
+      // set({ user: null, token: null, isLoading: false });
+      // console.log(get().user);
       // toast.error("Session expired, please log in again.");
     }
   },

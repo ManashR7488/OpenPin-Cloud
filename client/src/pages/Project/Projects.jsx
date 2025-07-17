@@ -16,8 +16,6 @@ export default function Projects() {
     deleteProject,
   } = useDataStore();
 
-  const [error, setError] = useState(null);
-
   const [showNewForm, setShowNewForm] = useState(false);
   const [form, setForm] = useState({ name: "", description: "" });
 
@@ -28,7 +26,7 @@ export default function Projects() {
 
   useEffect(() => {
     fetchProjects();
-  }, [addProject, updateProject]);
+  }, [addProject, updateProject, deleteProject]);
 
   const handleCreate = async (e) => {
     e.preventDefault();
@@ -138,90 +136,95 @@ export default function Projects() {
       )}
 
       {/* Loading & Error */}
-      {isLoading && (
-        <p className="text-gray-600">
+      {isLoading && projects.length < 1 && (
+        <p className="text-gray-600 flex items-center">
           Loading projects... <ImSpinner3 />{" "}
         </p>
       )}
-      {error && <p className="text-red-500">{error}</p>}
 
       {/* Project List */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {[...projects]
-          .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
-          .map((project) => (
-            <div
-              key={project._id}
-              className="relative p-6 bg-white rounded-2xl shadow hover:shadow-lg transition hover:ring-2 box-border ring-zinc-400  border-blue-700 cursor-pointer"
-            >
-              {/* Edit Mode */}
-              {editingId === project._id ? (
-                <>
-                  <input
-                    type="text"
-                    value={editName}
-                    onChange={(e) => setEditName(e.target.value)}
-                    className="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none mb-4"
-                  />
-                  <input
-                    type="text"
-                    value={editDescription}
-                    onChange={(e) => setEditDescription(e.target.value)}
-                    className="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none mb-4"
-                    placeholder="Project Description"
-                  />
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => handleSave(project._id)}
-                      className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-green-600 hover:bg-green-500 text-white rounded-lg transition"
-                    >
-                      {isLoading ? (
-                        <ImSpinner3
-                          size={20}
-                          className="animate-spin duration-[5s]"
-                        />
-                      ) : (
-                        <>
-                          <FiSave /> Save
-                        </>
-                      )}
-                    </button>
-                    <button
-                      onClick={cancelEdit}
-                      className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-gray-300 hover:bg-gray-200 text-gray-700 rounded-lg transition"
-                    >
-                      <FiX /> Cancel
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                    {project.name}
-                  </h3>
-                  <p className="text-sm text-gray-600 mb-4">
-                    {/* Optionally show description */}
-                    {project?.description}
-                  </p>
-                  <div className="flex gap-2 justify-end">
-                    <button
-                      onClick={() => startEdit(project)}
-                      className=" flex items-center justify-center gap-1 px-3 py-1 bg-yellow-500 hover:bg-yellow-400 text-white rounded-lg transition"
-                    >
-                      <FiEdit2 /> Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(project._id)}
-                      className=" flex items-center justify-center gap-1 px-3 py-2 bg-red-500 hover:bg-red-400 text-white rounded-lg transition"
-                    >
-                      <FiTrash2 /> Delete
-                    </button>
-                  </div>
-                </>
-              )}
-            </div>
-          ))}
-      </div>
+      {projects.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...projects]
+            .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+            .map((project) => (
+              <div
+                key={project._id}
+                className="relative p-6 bg-white rounded-2xl shadow hover:shadow-lg transition hover:ring-2 box-border ring-zinc-400  border-blue-700 cursor-pointer"
+              >
+                {/* Edit Mode */}
+                {editingId === project._id ? (
+                  <>
+                    <input
+                      type="text"
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                      className="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none mb-4"
+                    />
+                    <input
+                      type="text"
+                      value={editDescription}
+                      onChange={(e) => setEditDescription(e.target.value)}
+                      className="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none mb-4"
+                      placeholder="Project Description"
+                    />
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleSave(project._id)}
+                        className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-green-600 hover:bg-green-500 text-white rounded-lg transition"
+                      >
+                        {isLoading ? (
+                          <ImSpinner3
+                            size={20}
+                            className="animate-spin duration-[5s]"
+                          />
+                        ) : (
+                          <>
+                            <FiSave /> Save
+                          </>
+                        )}
+                      </button>
+                      <button
+                        onClick={cancelEdit}
+                        className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-gray-300 hover:bg-gray-200 text-gray-700 rounded-lg transition"
+                      >
+                        <FiX /> Cancel
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                      {project.name}
+                    </h3>
+                    <p className="text-sm text-gray-600 mb-4">
+                      {/* Optionally show description */}
+                      {project?.description}
+                    </p>
+                    <div className="flex gap-2 justify-end">
+                      <button
+                        onClick={() => startEdit(project)}
+                        className=" flex items-center justify-center gap-1 px-3 py-1 bg-yellow-500 hover:bg-yellow-400 text-white rounded-lg transition"
+                      >
+                        <FiEdit2 /> Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(project._id)}
+                        className=" flex items-center justify-center gap-1 px-3 py-2 bg-red-500 hover:bg-red-400 text-white rounded-lg transition"
+                      >
+                        <FiTrash2 /> Delete
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            ))}
+        </div>
+      ) : (
+        <div className="h-full w-full">
+          No Projects yet
+        </div>
+      )}
     </div>
   );
 }
