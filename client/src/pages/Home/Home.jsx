@@ -1,10 +1,6 @@
 // src/pages/Home/Home.jsx
 import React from "react";
-import {
-  FiArrowRight,
-  FiPlus,
-  FiLayers,
-} from "react-icons/fi";
+import { FiArrowRight, FiPlus, FiLayers } from "react-icons/fi";
 import { SiArduino, SiEspressif } from "react-icons/si";
 
 import { Link } from "react-router-dom";
@@ -39,10 +35,17 @@ const features = [
 export default function Home() {
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
-      <header className="w-full flex items-center justify-between px-6 py-4">
-        <div className="text-2xl font-bold flex flex-col items-start">
-          <h1>OpenPin</h1>
-          <h1 className="text-[10px] font-[200] self-end ml-10">Powered By MR</h1>
+      <header className="w-full flex items-center justify-between px-6 py-2">
+        <div className="flex items-center">
+          <div className="h-15">
+            <img src="/images/fabicon1.png" alt="" className="object-cover h-full" />
+          </div>
+          <div className="text-2xl font-bold flex flex-col items-start">
+            <h1>OpenPin</h1>
+            <h1 className="text-[10px] font-[200] self-end ml-10">
+              Powered By MR
+            </h1>
+          </div>
         </div>
         <div className="space-x-4">
           <Link

@@ -7,7 +7,7 @@ const Sidebar = () => {
 
   const navLinks = [
     { name: "Projects", path: "/app/projects", icon: <FiGrid /> },
-    { name: "Devices", path: "/app/devices", icon: <FiCpu /> },
+    // { name: "Devices", path: "/app/devices", icon: <FiCpu /> },
     { name: "Api key", path: "/app/credentials", icon: <FiKey /> },
     { name: "Settings", path: "/app/settings", icon: <FiSettings /> },
   ];

@@ -85,7 +85,7 @@ const Dashboard = () => {
     <div className="p-6">
       {/* Greeting */}
       <h1 className="text-3xl font-bold text-gray-800 mb-4">
-        Welcome back{user ? `, ${user.name}` : ""}!
+        Welcome back{user ? `, ${user?.name?.split(" ")[0]} ${user?.name?.split(" ")[1]}` : ""}!
       </h1>
       <p className="text-gray-600 mb-8">
         Here’s a quick overview of your OpenPin Cloud workspace.

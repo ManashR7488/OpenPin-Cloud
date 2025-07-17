@@ -178,7 +178,7 @@ export const userLogout = async (req, res) => {
   // Clear the cookie
   res.cookie(COOKIE_NAME, "", {
     httpOnly: true,
-    sameSite: "none",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     secure: process.env.NODE_ENV === "production", // HTTPS only in production
     maxAge: 0, // 7 
   });

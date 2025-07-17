@@ -1,9 +1,9 @@
-import dotenv from "dotenv";
-dotenv.config();
 import express from "express";
 import os from "os";
 import cookieParser from "cookie-parser";
-import cors from "cors"
+import cors from "cors";
+import dotenv from "dotenv";
+dotenv.config();
 
 import userRoute from "./routes/user.route.js";
 import projectRoute from "./routes/prject.route.js";
@@ -12,24 +12,25 @@ import featureRoutes from "./routes/feature.route.js";
 import connectDB from "./config/db.js";
 
 const app = express();
-console.log(process.env.PROJECT_NAME)
+console.log(process.env.PROJECT_NAME);
 
 const PORT = process.env.PORT || 5000;
 
-const PROJECT_NAME=process.env.PROJECT_NAME
-const JWT_SECRET= process.env.JWT_SECRET
-const MONGO_URI= process.env.MONGO_URI
-const NODE_ENV = process.env.NODE_ENV
 
-app.use(cors({
-  origin: process.env.NODE_ENV === "production" ? "https://openpin-cloud.vercel.app" : "http://localhost:5173",
-  credentials:true
-}))
+app.use(
+  cors({
+    origin:
+      process.env.NODE_ENV === "production"
+        ? "https://openpin-cloud.vercel.app"
+        : "http://localhost:5173",
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser())
+app.use(cookieParser());
 
-process.env.NODE_ENV === "production" && await connectDB();  // in production we connect to database first.
+process.env.NODE_ENV === "production" && (await connectDB()); // in production we connect to database first.
 
 app.get("/", (req, res) => {
   res.send("Hello from OpenPin Express server!");
@@ -39,9 +40,6 @@ app.use("/api/auth", userRoute);
 app.use("/api/projects", projectRoute);
 app.use("/api/projects/:projectId/devices", deviceRoutes);
 app.use("/api/projects/:projectId/devices/:deviceId/features", featureRoutes);
-
-
-
 
 // Endpoint to receive sensor data from devices
 
@@ -65,10 +63,8 @@ function printLocalIP() {
   return null;
 }
 
-
-
 app.listen(PORT, () => {
   connectDB();
-  console.log(`Server is running on http://localhost:${PORT}`);
+  process.env.NODE_ENV === "production" && console.log(`Server is running on http://localhost:${PORT}`);
   printLocalIP();
 });

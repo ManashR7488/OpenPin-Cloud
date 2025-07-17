@@ -106,8 +106,19 @@ export const updateProject = async (req, res) => {
         .json({ message: "Project not found or unauthorized." });
     }
 
+    // Check if no changes detected
+    if (
+      (name === undefined || name === project.name) &&
+      (description === undefined || description === project.description)
+    ) {
+      return res
+        .status(400)
+        .json({ message: "You already have a project with this name and description" });
+    }
+
     // 2. If name is changing, ensure uniqueness for this user
     if (name && name !== project.name) {
+      console.log(true)
       const exists = await Project.exists({ name, owner: userId });
       if (exists) {
         return res
