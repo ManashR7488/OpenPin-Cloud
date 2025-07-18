@@ -5,8 +5,8 @@ import { FiPlus, FiEdit2, FiTrash2, FiSave, FiX } from "react-icons/fi";
 import { ImSpinner3 } from "react-icons/im";
 import { toast } from "react-toastify";
 import useDataStore from "../../store/useDataStore";
-import moment from "moment"
-import { locale } from './../../../node_modules/moment/src/lib/moment/locale';
+import moment from "moment";
+import { locale } from "./../../../node_modules/moment/src/lib/moment/locale";
 
 export default function Projects() {
   const {
@@ -142,7 +142,7 @@ export default function Projects() {
             .map((project) => (
               <div
                 key={project._id}
-                className="relative bg-white p-6 rounded-2xl shadow-lg overflow-hidden transform hover:scale-105 transition"
+                className="relative bg-white p-6 rounded-2xl shadow-lg overflow-hidden transform hover:scale-101 transition"
               >
                 {/* Decorative Circle */}
                 <div className="absolute -top-5 -right-5 w-24 h-24 bg-blue-100 rounded-full animate-pulse opacity-50 pointer-events-none" />
@@ -166,7 +166,12 @@ export default function Projects() {
                         onClick={() => handleSave(project._id)}
                         className="flex items-center justify-center gap-1 px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded-full transition"
                       >
-                        <FiSave />
+                        {/* <FiSave /> */}
+                        {isLoading ? (
+                          <ImSpinner3 className="animate-spin" size={18} />
+                        ) : (
+                          <FiSave />
+                        )}
                       </button>
                       <button
                         onClick={cancelEdit}
@@ -190,8 +195,18 @@ export default function Projects() {
                     </p>
                     <div className="flex justify-between items-end gap-2">
                       <div className="text-xs flex flex-col">
-                        <span>Last Update: {moment(project.updatedAt).local().format("Do MMM YY, hh:mm:ss a")}</span>
-                        <span>Create At: {moment(project.createdAt).local().format("Do MMM YY, hh:mm:ss a")}</span>
+                        <span>
+                          Last Update:{" "}
+                          {moment(project.updatedAt)
+                            .local()
+                            .format("Do MMM YY, hh:mm:ss a")}
+                        </span>
+                        <span>
+                          Create At:{" "}
+                          {moment(project.createdAt)
+                            .local()
+                            .format("Do MMM YY, hh:mm:ss a")}
+                        </span>
                       </div>
                       <div className="flex justify-end gap-2">
                         <button
@@ -204,7 +219,12 @@ export default function Projects() {
                           onClick={() => handleDelete(project._id)}
                           className="flex items-center gap-1 px-3 py-1 bg-red-400 hover:bg-red-500 text-white rounded-full transition"
                         >
-                          <FiTrash2 />
+                          {/* <FiTrash2 /> */}
+                          {isLoading ? (
+                            <ImSpinner3 className="animate-spin" size={18} />
+                          ) : (
+                            <FiTrash2 />
+                          )}
                         </button>
                       </div>
                     </div>

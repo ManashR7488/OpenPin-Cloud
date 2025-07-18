@@ -17,7 +17,7 @@ const Sidebar = () => {
 
   const navLinks = [
     { name: "Projects", path: "/app/projects", icon: <FiGrid size={20} /> },
-    { name: "Devices",  path: "/app/devices",  icon: <FiCpu size={20} /> },
+    // { name: "Devices",  path: "/app/devices",  icon: <FiCpu size={20} /> },
     { name: "API Keys", path: "/app/credentials", icon: <FiKey size={20} /> },
     { name: "Settings", path: "/app/settings",    icon: <FiSettings size={20} /> },
   ];
@@ -53,7 +53,7 @@ const Sidebar = () => {
             to={path}
             title={collapsed ? name : undefined}
             className={({ isActive }) =>
-              `flex items-center justify-center gap-4 px-4 py-3 mx-2 my-1 rounded-lg transition-colors 
+              `flex items-center justify-center gap-4 px-4 py-1 mx-2 my-1 rounded-lg transition-colors 
               ${
                 isActive
                   ? "bg-gradient-to-r from-indigo-100 to-blue-50 text-blue-600 font-semibold"

@@ -5,6 +5,9 @@ import { toast } from "react-toastify";
 const useDataStore = create((set, get) => ({
   projects: [],
   isLoading: false,
+  devices: [],
+  currentProject: {},
+  isFetching: false,
 
   fetchProjects: async () => {
     set({ isLoading: true });
@@ -40,9 +43,7 @@ const useDataStore = create((set, get) => ({
       const res = await axiosInstance.patch(`/api/projects/${id}`, formData);
       const { project } = res.data;
       set((state) => ({
-        projects: state.projects.map((p) =>
-          p._id === id ? project : p
-        ),
+        projects: state.projects.map((p) => (p._id === id ? project : p)),
         isLoading: false,
       }));
       toast.success("Project updated.");
@@ -70,6 +71,12 @@ const useDataStore = create((set, get) => ({
       throw new Error(msg);
     }
   },
+
+  fetchOneProject: async (id) => {},
+  fetchDevice: async () => {},
+  addDevice: async (formData) => {},
+  updateDevice: async (formData, id) => {},
+  deleteDevice: async (id) => {},
 }));
 
 export default useDataStore;
