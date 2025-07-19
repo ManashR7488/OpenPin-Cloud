@@ -72,11 +72,83 @@ const useDataStore = create((set, get) => ({
     }
   },
 
-  fetchOneProject: async (id) => {},
+  fetchOneProject: async (id) => {
+    try {
+      const res = await axiosInstance.get(`/api/projects/${id}`);
+      const { project } = await res.data;
+      set({
+        currentProject: project,
+        devices: project.devices || [],
+      });
+    } catch (error) {
+      const msg = error.response?.data?.message || error.message;
+      toast.error(msg);
+      throw new Error(msg);
+    } finally {
+      //
+    }
+  },
   fetchDevice: async () => {},
-  addDevice: async (formData) => {},
-  updateDevice: async (formData, id) => {},
-  deleteDevice: async (id) => {},
+
+  addDevice: async (formData) => {
+    set({ isFetching: true });
+    try {
+      const res = await axiosInstance.post(
+        `/api/projects/${get().currentProject._id}/devices/create`,
+        formData
+      );
+      const { device } = await res.data;
+      set((state) => ({
+        devices: [...state.devices, device],
+        isFetching: false,
+      }));
+      toast.success("Device created");
+    } catch (error) {
+      const msg = error.response?.data?.message || error.message;
+      toast.error(msg);
+      throw new Error(msg);
+    } finally {
+      set({ isFetching: false });
+    }
+  },
+  updateDevice: async (formData, id) => {
+    set({ isFetching: true });
+    try {
+      const res = await axiosInstance.patch(
+        `/api/projects/${get().currentProject._id}/devices/${id}`,
+        formData
+      );
+      const { device } = await res.data;
+      set((state) => ({
+        devices: state.devices.map((p) => (p._id === id ? device : p)),
+        isFetching: false,
+      }));
+      toast.success("Device updated");
+    } catch {
+      const msg = error.response?.data?.message || error.message;
+      toast.error(msg);
+      set({ isFetching: false });
+      throw new Error(msg);
+    } finally {
+      set({ isFetching: false });
+    }
+  },
+  deleteDevice: async (id) => {
+    try {
+      await axiosInstance.delete(
+        `/api/projects/${get().currentProject._id}/devices/${id}`
+      );
+      set((state) => ({
+        devices: state.devices.filter((p) => p._id !== id),
+        isFetching: false,
+      }));
+      toast.info("Device deleted");
+    } catch {
+      toast.error("Failed to delete device");
+    } finally {
+      set({ isFetching: false });
+    }
+  },
 }));
 
 export default useDataStore;

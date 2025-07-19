@@ -171,6 +171,9 @@ export const updateDevice = async (req, res) => {
     // 5. Save changes
     const updated = await device.save();
 
+    project.updatedAt = updated.updatedAt
+    await project.save()
+
     // 6. Populate features and return
     const populated = await Device.findById(updated._id)
       .populate("features")

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import axios from "../../config/axios.configer";
 import {
   FiEdit2,
   FiTrash2,
@@ -11,22 +10,29 @@ import {
   FiSettings,
 } from "react-icons/fi";
 import { ImSpinner3 } from "react-icons/im";
-import { toast } from "react-toastify";
-import useDataStore from './../../store/useDataStore';
+import useDataStore from "./../../store/useDataStore";
 
 export default function ProjectDetails() {
   const { id: projectId } = useParams();
   const navigate = useNavigate();
-  const {currentProject, isFetching, fetchOneProject} = useDataStore()
+  const {
+    isLoading,
+    currentProject,
+    isFetching,
+    fetchOneProject,
+    devices,
+    addDevice,
+    updateDevice,
+    deleteDevice,
+    updateProject,
+  } = useDataStore();
+
   // Project state
-  const [project, setProject] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [projForm, setProjForm] = useState({ name: "", description: "" });
 
   // Device state
-  const [devices, setDevices] = useState([]);
-  const [deviceLoading, setDeviceLoading] = useState(false);
   const [showNewDev, setShowNewDev] = useState(false);
   const [devForm, setDevForm] = useState({ name: "", deviceType: "" });
   const [editingDevId, setEditingDevId] = useState(null);
@@ -34,18 +40,18 @@ export default function ProjectDetails() {
 
   const themes = {
     arduino: {
-      pulse: "bg-green-100",
-      iconBg: "bg-green-200",
-      iconColor: "text-green-600",
-      button: "bg-green-500 hover:bg-green-600",
-      accent: "bg-green-50",
-    },
-    esp32: {
       pulse: "bg-teal-100",
       iconBg: "bg-teal-200",
       iconColor: "text-teal-600",
       button: "bg-teal-500 hover:bg-teal-600",
       accent: "bg-teal-50",
+    },
+    esp32: {
+      pulse: "bg-green-100",
+      iconBg: "bg-green-200",
+      iconColor: "text-green-600",
+      button: "bg-green-500 hover:bg-green-600",
+      accent: "bg-green-50",
     },
     esp8266: {
       pulse: "bg-orange-100",
@@ -67,18 +73,15 @@ export default function ProjectDetails() {
   const fetchProject = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`/api/projects/${projectId}`);
-      setProject(res.data.project);
+      await fetchOneProject(projectId);
       setProjForm({
-        name: res.data.project.name,
-        description: res.data.project.description || "",
+        name: currentProject.name,
+        description: currentProject.description || "",
       });
-      setDevices(res.data.project.devices || []);
-    } catch (err) {
-      toast.error("Failed to load project.");
-      navigate("/app/projects");
-    } finally {
       setLoading(false);
+    } catch (err) {
+      setLoading(false);
+      navigate("/app/projects");
     }
   };
 
@@ -89,42 +92,20 @@ export default function ProjectDetails() {
   // Project handlers
   const handleProjSave = async () => {
     try {
-      const res = await axios.patch(
-        `/api/projects/updateProject/${projectId}`,
-        {
-          name: projForm.name,
-          description: projForm.description,
-        }
-      );
-      setProject(res.data.project);
+      await updateProject(projForm, projectId);
       setEditMode(false);
-      toast.success("Project updated");
-    } catch {
-      toast.error("Failed to update");
-    }
-  };
-
-  // Device CRUD
-  const fetchDevices = () => {
-    // we already have them from fetchProject
+      fetchProject();
+    } catch {}
   };
 
   const handleNewDevice = async (e) => {
     e.preventDefault();
-    setDeviceLoading(true);
     try {
-      const res = await axios.post(
-        `/api/projects/${projectId}/devices/create`,
-        devForm
-      );
-      setDevices((d) => [...d, res.data.device]);
+      const res = await addDevice(devForm);
       setDevForm({ name: "", deviceType: "" });
       setShowNewDev(false);
-      toast.success("Device created");
     } catch {
-      toast.error("Failed to create device");
-    } finally {
-      setDeviceLoading(false);
+      //
     }
   };
 
@@ -132,45 +113,51 @@ export default function ProjectDetails() {
     setEditingDevId(dev._id);
     setEditDevForm({ name: dev.name, deviceType: dev.deviceType });
   };
+
   const cancelEditDev = () => setEditingDevId(null);
 
   const handleSaveDev = async (id) => {
-    setDeviceLoading(true);
     try {
-      const res = await axios.patch(
-        `/api/projects/${projectId}/devices/${id}`,
-        editDevForm
-      );
-      setDevices((d) =>
-        d.map((dev) => (dev._id === id ? res.data.device : dev))
-      );
+      await updateDevice(editDevForm, id);
       setEditingDevId(null);
-      toast.success("Device updated");
     } catch {
-      toast.error("Failed to update device");
+      //
     } finally {
-      setDeviceLoading(false);
+      //
     }
   };
 
   const handleDelDev = async (id) => {
     if (!window.confirm("Delete this device?")) return;
-    setDeviceLoading(true);
     try {
-      await axios.delete(`/api/projects/${projectId}/devices/${id}`);
-      setDevices((d) => d.filter((dev) => dev._id !== id));
-      toast.info("Device deleted");
+      await deleteDevice(id);
     } catch {
-      toast.error("Failed to delete device");
+      //
     } finally {
-      setDeviceLoading(false);
+      //
     }
   };
 
   if (loading) {
     return (
-      <div className="p-6 text-center">
-        <ImSpinner3 className="mx-auto animate-spin" size={32} />
+      <div className="p-6 space-y-6 animate-pulse">
+        {/* Header Skeleton */}
+        <div className="h-8 bg-gray-200 rounded w-1/3"></div>
+        <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+
+        {/* Add Button Skeleton */}
+        <div className="h-10 bg-gray-200 rounded w-40"></div>
+
+        {/* Device Cards Skeleton Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="p-6 bg-gray-100 rounded-2xl space-y-4">
+              <div className="h-6 bg-gray-200 rounded w-1/2"></div>
+              <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+              <div className="h-8 bg-gray-200 rounded w-full"></div>
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
@@ -202,9 +189,11 @@ export default function ProjectDetails() {
           </div>
         ) : (
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">{project.name}</h1>
-            {project.description && (
-              <p className="text-gray-600">{project.description}</p>
+            <h1 className="text-3xl font-bold text-gray-900">
+              {currentProject.name}
+            </h1>
+            {currentProject.description && (
+              <p className="text-gray-600">{currentProject.description}</p>
             )}
           </div>
         )}
@@ -216,14 +205,20 @@ export default function ProjectDetails() {
                 onClick={handleProjSave}
                 className="flex items-center justify-center gap-1 px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded-full transition"
               >
-                <FiSave /> Save
+                {isLoading ? (
+                  <ImSpinner3 className="animate-spin" />
+                ) : (
+                  <>
+                    <FiSave /> Save
+                  </>
+                )}
               </button>
               <button
                 onClick={() => {
                   setEditMode(false);
                   setProjForm({
-                    name: project.name,
-                    description: project.description || "",
+                    name: currentProject.name,
+                    description: currentProject.description || "",
                   });
                 }}
                 className="flex items-center justify-center gap-1 px-3 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-full transition"
@@ -233,7 +228,13 @@ export default function ProjectDetails() {
             </div>
           ) : (
             <button
-              onClick={() => setEditMode(true)}
+              onClick={() => {
+                setProjForm({
+                  name: currentProject.name,
+                  description: currentProject.description || "",
+                });
+                setEditMode(true);
+              }}
               className="flex items-center gap-1 px-3 py-1 bg-yellow-400 hover:bg-yellow-500 text-white rounded-full transition"
             >
               <FiEdit2 /> Edit
@@ -317,9 +318,9 @@ export default function ProjectDetails() {
                   `px-4 py-2 text-white rounded-full transition flex items-center justify-center ` +
                   formTheme.button
                 }
-                disabled={deviceLoading}
+                disabled={isFetching}
               >
-                {deviceLoading ? (
+                {isFetching ? (
                   <ImSpinner3 className="animate-spin" />
                 ) : (
                   "Create Device"
@@ -332,102 +333,109 @@ export default function ProjectDetails() {
 
       {/* Devices Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {devices.map((dev) => {
-          const key = dev.deviceType.toLowerCase();
-          const theme = themes[key] || themes.others;
+        {devices
+          .slice()
+          .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+          .map((dev) => {
+            const key = dev.deviceType.toLowerCase();
+            const theme = themes[key] || themes.others;
 
-          return (
-            <div
-              key={dev._id}
-              className={`relative p-6 rounded-2xl shadow-lg overflow-hidden transform hover:scale-101 transition ${theme.accent}`}
-            >
+            return (
               <div
-                className={`absolute -top-5 -right-5 w-24 h-24 ${theme.pulse} rounded-full animate-pulse opacity-50 pointer-events-none`}
-              />
-
-              <div className="absolute h-full w-full top-0 left-0 flex justify-end overflow-hidden pointer-events-none">
+                key={dev._id}
+                className={`relative p-6 rounded-2xl shadow-lg overflow-hidden transform hover:scale-101 transition ${theme.accent}`}
+              >
                 <div
-                  className={`w-32 h-32 ${theme.iconBg} rounded-full flex items-center justify-center opacity-30`}
-                >
-                  <FiCpu size={48} className={`${theme.iconColor}`} />
-                </div>
-              </div>
+                  className={`absolute -top-5 -right-5 w-24 h-24 ${theme.pulse} rounded-full animate-pulse opacity-50 pointer-events-none`}
+                />
 
-              {editingDevId === dev._id ? (
-                <>
-                  <input
-                    value={editDevForm.name}
-                    onChange={(e) =>
-                      setEditDevForm((f) => ({ ...f, name: e.target.value }))
-                    }
-                    className="w-full mb-2 px-3 py-2 border rounded-lg"
-                  />
-                  <select
-                    value={editDevForm.deviceType}
-                    onChange={(e) =>
-                      setEditDevForm((f) => ({
-                        ...f,
-                        deviceType: e.target.value,
-                      }))
-                    }
-                    className="w-full mb-4 px-3 py-2 border rounded-lg"
+                <div className="absolute h-full w-full top-0 left-0 flex justify-end overflow-hidden pointer-events-none">
+                  <div
+                    className={`w-32 h-32 ${theme.iconBg} rounded-full flex items-center justify-center opacity-30`}
                   >
-                    <option value="esp32">ESP32</option>
-                    <option value="esp8266">ESP8266</option>
-                    <option value="Arduino">Arduino</option>
-                    <option value="Others">Others</option>
-                  </select>
-                  <div className="flex gap-2 justify-end">
-                    <button
-                      onClick={() => handleSaveDev(dev._id)}
-                      className="flex items-center justify-center gap-1 px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded-full transition"
-                    >
-                      <FiSave />
-                    </button>
-                    <button
-                      onClick={cancelEditDev}
-                      className="flex items-center justify-center gap-1 px-3 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-full transition"
-                    >
-                      <FiX />
-                    </button>
+                    <FiCpu size={48} className={`${theme.iconColor}`} />
                   </div>
-                </>
-              ) : (
-                <div className="relative">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-2">
-                      <FiCpu className={`${theme.iconColor}`} size={24} />
-                      <h3 className="text-lg font-semibold text-gray-800">
-                        {dev.name}
-                      </h3>
-                    </div>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => startEditDev(dev)}
-                        className={`p-1 ${theme.button} text-white rounded-full transition`}
-                      >
-                        <FiEdit2 />
-                      </button>
-                      <button
-                        onClick={() => handleDelDev(dev._id)}
-                        className="p-1 bg-red-400 hover:bg-red-500 text-white rounded-full transition"
-                      >
-                        <FiTrash2 />
-                      </button>
-                    </div>
-                  </div>
-                  <p className="text-gray-600 mb-4">Type: {dev.deviceType}</p>
-                  <Link
-                    to={`/app/projects/${projectId}/devices/${dev._id}`}
-                    className={`inline-block px-4 py-2 ${theme.button} text-white text-sm rounded-full`}
-                  >
-                    <FiSettings className="inline-block mr-1" /> Manage
-                  </Link>
                 </div>
-              )}
-            </div>
-          );
-        })}
+
+                {editingDevId === dev._id ? (
+                  <>
+                    <input
+                      value={editDevForm.name}
+                      onChange={(e) =>
+                        setEditDevForm((f) => ({ ...f, name: e.target.value }))
+                      }
+                      className="w-full mb-2 px-3 py-2 border rounded-lg"
+                    />
+                    <select
+                      value={editDevForm.deviceType}
+                      onChange={(e) =>
+                        setEditDevForm((f) => ({
+                          ...f,
+                          deviceType: e.target.value,
+                        }))
+                      }
+                      className="w-full mb-4 px-3 py-2 border rounded-lg"
+                    >
+                      <option value="esp32">ESP32</option>
+                      <option value="esp8266">ESP8266</option>
+                      <option value="Arduino">Arduino</option>
+                      <option value="Others">Others</option>
+                    </select>
+                    <div className="flex gap-2 justify-end">
+                      <button
+                        onClick={() => handleSaveDev(dev._id)}
+                        className="flex items-center justify-center gap-1 px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded-full transition"
+                      >
+                        {isFetching ? (
+                          <ImSpinner3 className="animate-spin" />
+                        ) : (
+                          <FiSave />
+                        )}
+                      </button>
+                      <button
+                        onClick={cancelEditDev}
+                        className="flex items-center justify-center gap-1 px-3 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-full transition"
+                      >
+                        <FiX />
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <div className="relative">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-2">
+                        <FiCpu className={`${theme.iconColor}`} size={24} />
+                        <h3 className="text-lg font-semibold text-gray-800">
+                          {dev.name}
+                        </h3>
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => startEditDev(dev)}
+                          className={`p-1 ${theme.button} text-white rounded-full transition`}
+                        >
+                          <FiEdit2 />
+                        </button>
+                        <button
+                          onClick={() => handleDelDev(dev._id)}
+                          className="p-1 bg-red-400 hover:bg-red-500 text-white rounded-full transition"
+                        >
+                          <FiTrash2 />
+                        </button>
+                      </div>
+                    </div>
+                    <p className="text-gray-600 mb-4">Type: {dev.deviceType}</p>
+                    <Link
+                      to={`/app/projects/${projectId}/devices/${dev._id}`}
+                      className={`inline-block px-4 py-2 ${theme.button} text-white text-sm rounded-full`}
+                    >
+                      <FiSettings className="inline-block mr-1" /> Manage
+                    </Link>
+                  </div>
+                )}
+              </div>
+            );
+          })}
       </div>
     </div>
   );
