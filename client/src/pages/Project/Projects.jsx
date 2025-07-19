@@ -21,6 +21,7 @@ export default function Projects() {
   const [editingId, setEditingId] = useState(null);
   const [editName, setEditName] = useState("");
   const [editDescription, setEditDescription] = useState("");
+  const [deleteingId, setDeleteingId] = useState("");
 
   useEffect(() => {
     fetchProjects();
@@ -62,11 +63,18 @@ export default function Projects() {
     } catch {}
   };
 
+  
   const handleDelete = async (id) => {
-    if (!window.confirm("Delete this project?")) return;
+    if (!window.confirm("Delete this project?")){
+      setDeleteingId("")
+       return;
+    };
     try {
       await deleteProject(id);
-    } catch {}
+      setDeleteingId("")
+    } catch {
+      setDeleteingId("")
+    }
   };
 
   if ((!isLoading || loading) && projects.length === 0) {
@@ -298,7 +306,7 @@ export default function Projects() {
                         className="flex items-center justify-center gap-1 px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded-full transition"
                       >
                         {/* <FiSave /> */}
-                        {isLoading ? (
+                        {isLoading && editingId === project._id ? (
                           <ImSpinner3 className="animate-spin" size={18} />
                         ) : (
                           <FiSave />
@@ -349,11 +357,14 @@ export default function Projects() {
                           <FiEdit2 />
                         </button>
                         <button
-                          onClick={() => handleDelete(project._id)}
+                          onClick={() => {
+                            setDeleteingId(project._id);
+                            handleDelete(project._id);
+                          }}
                           className="flex items-center gap-1 px-3 py-1 bg-red-400 hover:bg-red-500 text-white rounded-full transition"
                         >
                           {/* <FiTrash2 /> */}
-                          {isLoading ? (
+                          {isLoading && deleteingId === project._id ? (
                             <ImSpinner3 className="animate-spin" size={18} />
                           ) : (
                             <FiTrash2 />

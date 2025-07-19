@@ -31,7 +31,7 @@ export default function ProjectDetails() {
   const [loading, setLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [projForm, setProjForm] = useState({ name: "", description: "" });
-
+  const [deleteingId, setDeleteingId] = useState("");
   // Device state
   const [showNewDev, setShowNewDev] = useState(false);
   const [devForm, setDevForm] = useState({ name: "", deviceType: "" });
@@ -60,7 +60,7 @@ export default function ProjectDetails() {
       button: "bg-orange-500 hover:bg-orange-600",
       accent: "bg-orange-50",
     },
-    others: {
+    other: {
       pulse: "bg-gray-100",
       iconBg: "bg-gray-200",
       iconColor: "text-gray-600",
@@ -128,13 +128,18 @@ export default function ProjectDetails() {
   };
 
   const handleDelDev = async (id) => {
-    if (!window.confirm("Delete this device?")) return;
+    setTimeout(async () => {
+      if (!window.confirm("Delete this device?")) {
+        setDeleteingId("");
+        return;
+      }
+    }, 0);
     try {
       await deleteDevice(id);
     } catch {
       //
     } finally {
-      //
+      setDeleteingId("");
     }
   };
 
@@ -163,7 +168,7 @@ export default function ProjectDetails() {
   }
 
   const selectedKey = devForm.deviceType.toLowerCase();
-  const formTheme = themes[selectedKey] || themes.others;
+  const formTheme = themes[selectedKey] || themes.other;
 
   return (
     <div className="p-6 space-y-8">
@@ -338,7 +343,7 @@ export default function ProjectDetails() {
           .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
           .map((dev) => {
             const key = dev.deviceType.toLowerCase();
-            const theme = themes[key] || themes.others;
+            const theme = themes[key] || themes.other;
 
             return (
               <div
@@ -417,10 +422,17 @@ export default function ProjectDetails() {
                           <FiEdit2 />
                         </button>
                         <button
-                          onClick={() => handleDelDev(dev._id)}
+                          onClick={() => {
+                            setDeleteingId(dev._id);
+                            handleDelDev(dev._id);
+                          }}
                           className="p-1 bg-red-400 hover:bg-red-500 text-white rounded-full transition"
                         >
-                          <FiTrash2 />
+                          {isFetching ? (
+                            <ImSpinner3 className="animate-spin" />
+                          ) : (
+                            <FiTrash2 />
+                          )}
                         </button>
                       </div>
                     </div>

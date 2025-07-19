@@ -2,6 +2,10 @@ import { create } from "zustand";
 import axiosInstance from "../config/axios.configer";
 import { toast } from "react-toastify";
 
+const delay = (ms) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
+
 const useDataStore = create((set, get) => ({
   projects: [],
   isLoading: false,
@@ -12,6 +16,7 @@ const useDataStore = create((set, get) => ({
   fetchProjects: async () => {
     set({ isLoading: true });
     try {
+      (await import.meta.env.MODE) === "development" && (await delay(1000));
       const res = await axiosInstance.get("/api/projects");
       set({ projects: res.data.projects, isLoading: false });
     } catch (error) {
@@ -24,6 +29,7 @@ const useDataStore = create((set, get) => ({
   addProject: async (formData) => {
     set({ isLoading: true });
     try {
+      (await import.meta.env.MODE) === "development" && (await delay(1000));
       const res = await axiosInstance.post("/api/projects/create", formData);
       set((state) => ({
         projects: [...state.projects, res.data.project],
@@ -40,6 +46,7 @@ const useDataStore = create((set, get) => ({
   updateProject: async (formData, id) => {
     set({ isLoading: true });
     try {
+      (await import.meta.env.MODE) === "development" && (await delay(1000));
       const res = await axiosInstance.patch(`/api/projects/${id}`, formData);
       const { project } = res.data;
       set((state) => ({
@@ -58,6 +65,7 @@ const useDataStore = create((set, get) => ({
   deleteProject: async (id) => {
     set({ isLoading: true });
     try {
+      (await import.meta.env.MODE) === "development" && (await delay(1000));
       await axiosInstance.delete(`/api/projects/${id}`);
       set((state) => ({
         projects: state.projects.filter((p) => p._id !== id),
@@ -74,6 +82,7 @@ const useDataStore = create((set, get) => ({
 
   fetchOneProject: async (id) => {
     try {
+      (await import.meta.env.MODE) === "development" && (await delay(1000));
       const res = await axiosInstance.get(`/api/projects/${id}`);
       const { project } = await res.data;
       set({
@@ -93,6 +102,7 @@ const useDataStore = create((set, get) => ({
   addDevice: async (formData) => {
     set({ isFetching: true });
     try {
+      (await import.meta.env.MODE) === "development" && (await delay(1000));
       const res = await axiosInstance.post(
         `/api/projects/${get().currentProject._id}/devices/create`,
         formData
@@ -114,6 +124,7 @@ const useDataStore = create((set, get) => ({
   updateDevice: async (formData, id) => {
     set({ isFetching: true });
     try {
+      (await import.meta.env.MODE) === "development" && (await delay(1000));
       const res = await axiosInstance.patch(
         `/api/projects/${get().currentProject._id}/devices/${id}`,
         formData
@@ -135,6 +146,7 @@ const useDataStore = create((set, get) => ({
   },
   deleteDevice: async (id) => {
     try {
+      (await import.meta.env.MODE) === "development" && (await delay(1000));
       await axiosInstance.delete(
         `/api/projects/${get().currentProject._id}/devices/${id}`
       );
