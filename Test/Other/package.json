@@ -1,0 +1,16 @@
+{
+  "name": "other",
+  "version": "1.0.0",
+  "description": "test some backend",
+  "license": "ISC",
+  "author": "Manash Ranjan",
+  "type": "module",
+  "main": "bridge.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "mqtt": "^5.13.3",
+    "socket.io": "^4.8.1"
+  }
+}

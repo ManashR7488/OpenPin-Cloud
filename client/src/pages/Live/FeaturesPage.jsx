@@ -48,6 +48,8 @@ export default function FeaturesPage() {
       iconColor: "text-yellow-600",
       accent: "bg-yellow-50",
       button: "bg-yellow-500 hover:bg-yellow-600",
+      butRing: "ring-yellow-300 hover:ring-yellow-400",
+      text: "text-yellow-600",
     },
     switch: {
       pulse: "bg-blue-100",
@@ -55,6 +57,8 @@ export default function FeaturesPage() {
       iconColor: "text-blue-600",
       accent: "bg-blue-50",
       button: "bg-blue-500 hover:bg-blue-600",
+      butRing: "ring-blue-300 hover:ring-blue-400",
+      text: "text-blue-600",
     },
     relay: {
       pulse: "bg-red-100",
@@ -62,6 +66,8 @@ export default function FeaturesPage() {
       iconColor: "text-red-600",
       accent: "bg-red-50",
       button: "bg-red-500 hover:bg-red-600",
+      butRing: "ring-red-300 hover:ring-red-400",
+      text: "text-red-600",
     },
     fan: {
       pulse: "bg-green-100",
@@ -69,6 +75,8 @@ export default function FeaturesPage() {
       iconColor: "text-green-600",
       accent: "bg-green-50",
       button: "bg-green-500 hover:bg-green-600",
+      butRing: "ring-green-300 hover:ring-green-400",
+      text: "text-green-600",
     },
     temperature: {
       pulse: "bg-orange-100",
@@ -76,6 +84,8 @@ export default function FeaturesPage() {
       iconColor: "text-orange-600",
       accent: "bg-orange-50",
       button: "bg-orange-500 hover:bg-orange-600",
+      butRing: "ring-orange-300 hover:ring-orange-400",
+      text: "text-orange-300",
     },
     humidity: {
       pulse: "bg-teal-100",
@@ -83,6 +93,8 @@ export default function FeaturesPage() {
       iconColor: "text-teal-600",
       accent: "bg-teal-50",
       button: "bg-teal-500 hover:bg-teal-600",
+      butRing: "ring-teal-300 hover:ring-teal-400",
+      text: "text-teal-300",
     },
     gas: {
       pulse: "bg-purple-100",
@@ -90,6 +102,8 @@ export default function FeaturesPage() {
       iconColor: "text-purple-600",
       accent: "bg-purple-50",
       button: "bg-purple-500 hover:bg-purple-600",
+      butRing: "ring-purple-300 hover:ring-purple-400",
+      text: "text-purple-300",
     },
     sensor: {
       pulse: "bg-gray-100",
@@ -97,6 +111,8 @@ export default function FeaturesPage() {
       iconColor: "text-gray-600",
       accent: "bg-gray-50",
       button: "bg-gray-500 hover:bg-gray-600",
+      butRing: "ring-gray-300 hover:ring-gray-400",
+      text: "text-gray-300",
     },
   };
 
@@ -158,13 +174,16 @@ export default function FeaturesPage() {
     if (confirm("Delete this feature?"))
       await deleteFeature(projectId, deviceId, id);
   };
+  const handleToggle = (key, newValue) => {
+    sendControl(secret, key, newValue);
+  };
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
       <header className="flex justify-between items-center mb-6">
         <div>
           <h2 className="text-3xl font-bold">
-            {currentDevice?.name || "Device"} Features
+            {currentDevice?.name || "Device"}
           </h2>
         </div>
         <button
@@ -232,7 +251,7 @@ export default function FeaturesPage() {
               />
               <div className="absolute h-full w-full top-0 left-0 flex justify-end overflow-hidden pointer-events-none">
                 <div
-                  className={`w-32 h-32 ${theme.iconBg} rounded-full flex items-center justify-center opacity-30`}
+                  className={`w-32 h-32 ${theme.iconBg} rounded-full flex items-center justify-center opacity-20`}
                 >
                   {icons[f.type]}
                 </div>
@@ -304,11 +323,10 @@ export default function FeaturesPage() {
                       <label className="inline-flex items-center gap-2">
                         <PowerSwitch
                           isOn={!!f.value}
-                          onToggle={() =>
-                            handleSwitchChange(f, !featureValues[f.key])
-                          }
+                          theme={themes[f.type]}
+                          onToggle={(newVal) => handleToggle(f.key, newVal)}
                         />
-                        {f.type}
+                        {/* {f.type} */}
                       </label>
                     ) : (
                       <span className="text-xl font-bold">

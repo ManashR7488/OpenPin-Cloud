@@ -136,7 +136,6 @@ export const createFeature = async (req, res) => {
       value: null,
       unit,
       pin,
-      meta,
     });
 
     // 6. Link it into the device

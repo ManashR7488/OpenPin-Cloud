@@ -11,7 +11,11 @@ const useLiveStore = create((set, get) => ({
 
   connect: (secret) => {
     if (get().socket) return;
-    const socket = io(SOCKET_URL, { autoConnect: false });
+    const socket = io(SOCKET_URL, { 
+      autoConnect: false,
+      path:"/api/socket.io",
+      transports: ['websocket'], 
+     });
     // console.log(socket)
     socket.connect(() => console.log('WS connected'));
     socket.emit('register', { secret });

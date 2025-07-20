@@ -10,8 +10,9 @@ import projectRoute from "./routes/prject.route.js";
 import deviceRoutes from "./routes/device.route.js";
 import featureRoutes from "./routes/feature.route.js";
 import connectDB from "./config/db.js";
+import { app, server } from "./bridge.js";
 
-const app = express();
+// const app = express();
 console.log(process.env.PROJECT_NAME);
 
 const PORT = process.env.PORT || 5000;
@@ -41,13 +42,14 @@ app.use("/api/projects", projectRoute);
 app.use("/api/projects/:projectId/devices", deviceRoutes);
 app.use("/api/projects/:projectId/devices/:deviceId/features", featureRoutes);
 
+
 // Endpoint to receive sensor data from devices
 
-app.post("/api/sensordata", (req, res) => {
-  console.log(req.body);
+// app.post("/api/sensordata", (req, res) => {
+//   console.log(req.body);
 
-  res.send(`Received sensor data from device `);
-});
+//   res.send(`Received sensor data from device `);
+// });
 
 function printLocalIP() {
   const interfaces = os.networkInterfaces();
@@ -63,8 +65,8 @@ function printLocalIP() {
   return null;
 }
 
-app.listen(PORT, () => {
-  connectDB();
+server.listen(PORT, async () => {
+  await connectDB();
   process.env.NODE_ENV === "production" && console.log(`Server is running on http://localhost:${PORT}`);
   printLocalIP();
 });
