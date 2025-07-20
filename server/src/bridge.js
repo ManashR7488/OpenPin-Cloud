@@ -13,10 +13,15 @@ const app = express();
 // Create HTTP + Socket.IO server
 const server = http.createServer(app);
 export const io = new Server(server, {
-  cors: { origin: "*" },
+  cors: {
+    origin:
+      process.env.NODE_ENV === "production"
+        ? "https://openpin-cloud.vercel.app"
+        : "http://localhost:5173",
+  },
   path: "/api/socket.io",
 });
-
+console.log(io._path)
 // --- MQTT Bridge ---
 const mqttClient = mqtt.connect(
   process.env.MQTT_BROKER_URL || "mqtt://broker.emqx.io"
