@@ -9,7 +9,7 @@ const SOCKET_URL = import.meta.env.MODE === "development"
 const socket = io(SOCKET_URL, {
   autoConnect: false,
   path: "/api/socket.io",
-  transports: ["websocket"],
+  transports: ["polling"],
 });
 
 // Debug logging
