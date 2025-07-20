@@ -1,55 +1,46 @@
+// client/src/store/useLiveStore.js
 import { io } from "socket.io-client";
 import { create } from "zustand";
 
-const SOCKET_URL =
-  (await import.meta.env.MODE) === "development"
-    ? "http://localhost:5000"
-    : "https://openpin-cloud-backend.vercel.app";
+const SOCKET_URL = import.meta.env.MODE === "development"
+  ? "http://localhost:5000"
+  : "https://openpin-cloud-backend.vercel.app";
 
-    console.log(SOCKET_URL);
+const socket = io(SOCKET_URL, {
+  autoConnect: false,
+  path: "/api/socket.io",
+  transports: ["websocket"],
+});
+
+// Debug logging
+socket.on("connect", () => console.log("✅ WS connected", socket.id));
+socket.on("connect_error", (err) => console.error("❌ WS connection error", err));
+socket.on("disconnect", (reason) => console.warn("⚠️ WS disconnected", reason));
 
 const useLiveStore = create((set, get) => ({
-  socket: null,
-  liveData: {}, // entire device data map
-
+  liveData: {},
   connect: (secret) => {
-    if (get().socket) return;
-    const socket = io(SOCKET_URL, {
-      autoConnect: false,
-      path: "/api/socket.io",
-      // transports: ["websocket"],
-    });
-    console.log(socket)
-    socket.connect(() => console.log("WS connected"));
-    socket.emit("register", { secret });
-
-    // replace per-feature update with full data sync
+    if (socket.connected) {
+      socket.emit("register", { secret });
+      return;
+    }
+    // Subscribe to data
     socket.on("dataUpdate", ({ data }) => {
       set({ liveData: data });
-      // console.log(get().liveData)
     });
-
-    // also keep backward compatibility for featureUpdate
-    // socket.on('featureUpdate', ({ key, value }) => {
-    //   set((state) => ({
-    //     liveData: { ...state.liveData, [key]: value },
-    //   }));
-    // });
-
-    socket.on("disconnect", () => {
-      set({ socket: null });
+    socket.on("featureUpdate", ({ key, value }) => {
+      set((state) => ({ liveData: { ...state.liveData, [key]: value } }));
     });
-
-    set({ socket });
+    // Connect and register
+    socket.connect();
+    socket.emit("register", { secret });
   },
-
   disconnect: () => {
-    get().socket?.disconnect();
-    set({ socket: null, liveData: {} });
+    socket.disconnect();
+    set({ liveData: {} });
   },
-
   sendControl: (secret, key, value) => {
-    get().socket?.emit("control", { secret, key, value });
+    socket.emit("control", { secret, key, value });
     // optimistic UI update
     set((state) => ({ liveData: { ...state.liveData, [key]: value } }));
   },
