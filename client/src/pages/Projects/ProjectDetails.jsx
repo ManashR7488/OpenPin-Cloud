@@ -428,7 +428,7 @@ export default function ProjectDetails() {
                           }}
                           className="p-1 bg-red-400 hover:bg-red-500 text-white rounded-full transition"
                         >
-                          {isFetching ? (
+                          {isFetching && deleteingId === dev._id ? (
                             <ImSpinner3 className="animate-spin" />
                           ) : (
                             <FiTrash2 />
