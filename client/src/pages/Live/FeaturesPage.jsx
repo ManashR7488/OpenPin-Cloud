@@ -19,7 +19,7 @@ import { PiFanLight } from "react-icons/pi";
 import { FaLightbulb } from "react-icons/fa";
 import PowerSwitch from "../../components/PowerSwitch/PowerSwitch";
 import SmokeSensor from "../../components/icon/SmokeSensor";
-import Relay from "../../components/icon/relay";
+import Relay from "../../components/icon/Relay";
 
 export default function FeaturesPage() {
   const { pid: projectId, did: deviceId } = useParams();
