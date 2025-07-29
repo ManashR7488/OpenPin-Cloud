@@ -11,6 +11,7 @@ import deviceRoutes from "./routes/device.route.js";
 import featureRoutes from "./routes/feature.route.js";
 import connectDB from "./config/db.js";
 import { app, server } from "./bridge.js";
+import path from "path";
 
 // const app = express();
 console.log(process.env.PROJECT_NAME);
