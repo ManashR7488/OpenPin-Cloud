@@ -6,7 +6,7 @@ const PowerSwitch = ({ isOn, onToggle, theme }) => {
   return (
     <button
       onClick={() => onToggle(!isOn)}
-      className="focus:outline-none active:scale-95 active:shadow-inner transition-transform duration-150 "
+      className="focus:outline-none flex flex-col items-center justify-center gap-2 active:scale-95 active:shadow-inner transition-transform duration-150 "
     >
       <div
         className={`relative w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300 shadow-lg
@@ -34,6 +34,7 @@ const PowerSwitch = ({ isOn, onToggle, theme }) => {
           `}
         />
       </div>
+      <span className="text-[8px]">{isOn ? "On" : "Off"}</span>
     </button>
   );
 };

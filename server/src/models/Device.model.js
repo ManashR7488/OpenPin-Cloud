@@ -28,7 +28,6 @@ const deviceSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.Mixed, // { relay_1: "ON", temperature: 27.8 }
       default: {},
     },
-
     meta: {
       icon: { type: String },
       color: { type: String },
