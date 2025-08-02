@@ -2,7 +2,6 @@ import express from "express";
 import http from "http";
 import { Server } from "socket.io";
 import mqtt from "mqtt";
-import mongoose from "mongoose";
 import Device from "./models/Device.model.js";
 import Feature from "./models/Feature.model.js";
 
@@ -28,6 +27,7 @@ const mqttClient = mqtt.connect(
 );
 
 mqttClient.on("connect", () => {
+
   console.log("✅ Connected to MQTT broker");
 
   // 1) Listen for device connect requests
