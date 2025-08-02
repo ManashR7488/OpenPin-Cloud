@@ -2,6 +2,7 @@ import express from "express";
 import os from "os";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import path from "path";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -16,7 +17,6 @@ import { app, server } from "./bridge.js";
 console.log(process.env.PROJECT_NAME);
 
 const PORT = process.env.PORT || 5000;
-
 
 app.use(
   cors({
@@ -42,7 +42,6 @@ app.use("/api/projects", projectRoute);
 app.use("/api/projects/:projectId/devices", deviceRoutes);
 app.use("/api/projects/:projectId/devices/:deviceId/features", featureRoutes);
 
-
 function printLocalIP() {
   const interfaces = os.networkInterfaces();
   for (const name of Object.keys(interfaces)) {
@@ -55,6 +54,13 @@ function printLocalIP() {
   }
   console.log("Local IP address not found.");
   return null;
+}
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../client/dist")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "../client", "dist", "index.html"));
+  });
 }
 
 server.listen(PORT, async () => {
