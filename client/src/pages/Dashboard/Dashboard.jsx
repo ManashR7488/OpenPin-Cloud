@@ -39,9 +39,9 @@ const Dashboard = () => {
       .catch(console.error);
 
     // Fetch device status summary
-    axios.get('/api/devices/status-summary')
-      .then(res => setDeviceStats(res.data))
-      .catch(console.error);
+    // axios.get('/api/devices/status-summary')
+    //   .then(res => setDeviceStats(res.data))
+    //   .catch(console.error);
 
   }, []);
 
