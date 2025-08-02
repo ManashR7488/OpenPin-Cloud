@@ -3,6 +3,7 @@ import os from "os";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import path from "path";
+import { fileURLToPath } from "url";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -17,7 +18,6 @@ import { app, server } from "./bridge.js";
 console.log(process.env.PROJECT_NAME);
 
 const PORT = process.env.PORT || 5000;
-const __dirname = path.resolve();
 
 app.use(
   cors({
@@ -38,6 +38,18 @@ process.env.NODE_ENV === "production" && (await connectDB()); // in production w
 //   res.send("Hello from OpenPin Express server!");
 // });
 
+// These are needed if using ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../client/dist")));
+
+  app.get("/*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "../client/dist", "index.html"));
+  });
+}
+
 app.use("/api/auth", userRoute);
 app.use("/api/projects", projectRoute);
 app.use("/api/projects/:projectId/devices", deviceRoutes);
@@ -57,12 +69,6 @@ function printLocalIP() {
   return null;
 }
 
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../client/dist")));
-  app.get("/*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "../client", "dist", "index.html"));
-  });
-}
 
 server.listen(PORT, async () => {
   await connectDB();
