@@ -32,7 +32,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-process.env.NODE_ENV === "production" && (await connectDB()); // in production we connect to database first.
+// process.env.NODE_ENV === "production" && (await connectDB()); // in production we connect to database first.
 
 // app.get("/", (req, res) => {
 //   res.send("Hello from OpenPin Express server!");
@@ -41,12 +41,13 @@ process.env.NODE_ENV === "production" && (await connectDB()); // in production w
 // These are needed if using ESM
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const __client = path.join(__dirname, "../../client");
 
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../client/dist")));
+  app.use(express.static(path.join(__client, "dist")));
 
   app.get("/*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "../client/dist", "index.html"));
+    res.sendFile(path.resolve(__client, "dist", "index.html"));
   });
 }
 
