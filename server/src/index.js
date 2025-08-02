@@ -46,7 +46,7 @@ const __client = path.join(__dirname, "../../client");
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__client, "dist")));
 
-  app.get("/*", (req, res) => {
+  app.get(/^\/(?!api).*/, (req, res) => {
     res.sendFile(path.resolve(__client, "dist", "index.html"));
   });
 }
