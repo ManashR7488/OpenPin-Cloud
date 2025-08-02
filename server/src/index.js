@@ -34,9 +34,9 @@ app.use(cookieParser());
 
 process.env.NODE_ENV === "production" && (await connectDB()); // in production we connect to database first.
 
-app.get("/", (req, res) => {
-  res.send("Hello from OpenPin Express server!");
-});
+// app.get("/", (req, res) => {
+//   res.send("Hello from OpenPin Express server!");
+// });
 
 app.use("/api/auth", userRoute);
 app.use("/api/projects", projectRoute);
