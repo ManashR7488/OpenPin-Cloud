@@ -17,6 +17,7 @@ import { app, server } from "./bridge.js";
 console.log(process.env.PROJECT_NAME);
 
 const PORT = process.env.PORT || 5000;
+const __dirname = path.resolve();
 
 app.use(
   cors({
