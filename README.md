@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![OpenPin Logo](client/public/images/fabicon.png)
+![OpenPin Logo](client/public/images/fabicon1.png)
 
 **A Developer-Friendly IoT Cloud Platform for ESP32/ESP8266 Devices**
 
