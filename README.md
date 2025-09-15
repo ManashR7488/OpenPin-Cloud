@@ -83,22 +83,22 @@
 
 ```mermaid
 graph TB
-    subgraph "IoT Devices"
-        A[ESP32/ESP8266<br/>OpenPin Library]
+    subgraph IoT["IoT Devices"]
+        A["ESP32/ESP8266<br/>OpenPin Library"]
     end
     
-    subgraph "Communication Layer"
-        B[MQTT Broker<br/>broker.emqx.io]
-        C[WebSocket<br/>Socket.IO]
+    subgraph Comm["Communication Layer"]
+        B["MQTT Broker<br/>broker.emqx.io"]      
     end
     
-    subgraph "Backend Services"
-        D[Node.js Server<br/>Express + MQTT Bridge]
-        E[MongoDB<br/>Database]
+    subgraph Backend["Backend Services"]
+        D["Node.js Server<br/>Express + MQTT Bridge"]
+        E["MongoDB<br/>Database"]
+        C["WebSocket<br/>Socket.IO"]
     end
     
-    subgraph "Frontend"
-        F[React Dashboard<br/>Vite + TailwindCSS]
+    subgraph Frontend["Frontend"]
+        F["React Dashboard<br/>Vite + TailwindCSS"]
     end
     
     A <-->|MQTT| B
